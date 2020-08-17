@@ -71,7 +71,7 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
 
         # check meta
         # XXX add proper meta data parsing
-        if six.PY3 and isinstance(html, bytes):
+        if isinstance(html, bytes):
             html = html.decode()
         metas = dict(re.compile('<meta[^>]*?name=[\'"]([^>]*?)[\'"][^>]*?content=[\'"]([^>]*?)[\'"][^>]*?>', re.IGNORECASE).findall(html))
         for app_name, app_spec in data['apps'].items():
