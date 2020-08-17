@@ -45,13 +45,16 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
             print('after request')
             if headers is None:
                 headers = response.headers
+                print('before headers')
             if html is None:
                 html = response.read()
+                print('html = response.read()')
         except Exception as e:
             print('Error:', e)
 
     # check headers
     if headers:
+        print('headers')
         for app_name, app_spec in data['apps'].items():
             if 'headers' in app_spec:
                 if contains_dict(headers, app_spec['headers']):
@@ -59,6 +62,7 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
 
     # check html
     if html:
+        print('html')
         for app_name, app_spec in data['apps'].items():
             for key in 'html', 'script':
                 snippets = app_spec.get(key, [])
