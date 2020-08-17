@@ -1,13 +1,9 @@
-import six
 import sys
 import os
 import re
 import json
 
-if six.PY2:
-    import urllib2
-else:
-    import urllib.request as urllib2
+import urllib.request as urllib2
 
 
 def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
@@ -113,7 +109,7 @@ def get_categories(app_spec):
 def contains(v, regex):
     """Removes meta data from regex then checks for a regex match
     """
-    if six.PY3 and isinstance(v, bytes):
+    if isinstance(v, bytes):
         v = v.decode()
     return re.compile(regex.split('\\;')[0], flags=re.IGNORECASE).search(v)
 
