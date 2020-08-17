@@ -35,11 +35,14 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
     # download content
     if None in (headers, html):
         try:
-            request = urllib2.Request(url, None, {'User-Agent': user_agent})
+            print('request')
+            request = urllib2.Request(url, None, {'User-Agent': user_agent}, method='GET')
             if html:
                 # already have HTML so just need to make HEAD request for headers
                 request.get_method = lambda: 'HEAD'
+            print('before request')
             response = urllib2.urlopen(request, timeout=timeout)
+            print('after request')
             if headers is None:
                 headers = response.headers
             if html is None:
