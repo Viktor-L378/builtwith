@@ -31,26 +31,20 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
     # download content
     if None in (headers, html):
         try:
-            print('request')
             request = urllib2.Request(url, None, {'User-Agent': user_agent}, method='GET')
             if html:
                 # already have HTML so just need to make HEAD request for headers
                 request.get_method = lambda: 'HEAD'
             response = urllib2.urlopen(request, timeout=timeout)
-            print(dir(response))
-            print(response.getheaders())
             if headers is None:
-                headers = response.headers
-                print('before headers')
+                headers = dict((key, value) for key, value in response.getheaders())
             if html is None:
                 html = response.read()
-                print('html = response.read()')
         except Exception as e:
             print('Error:', e)
 
     # check headers
     if headers:
-        print('headers')
         for app_name, app_spec in data['apps'].items():
             if 'headers' in app_spec:
                 if contains_dict(headers, app_spec['headers']):
@@ -58,7 +52,6 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
 
     # check html
     if html:
-        print('html')
         for app_name, app_spec in data['apps'].items():
             for key in 'html', 'script':
                 snippets = app_spec.get(key, [])
@@ -68,7 +61,6 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
                     if contains(html, snippet):
                         add_app(techs, app_name, app_spec)
                         break
-
         # check meta
         # XXX add proper meta data parsing
         if isinstance(html, bytes):
@@ -98,7 +90,7 @@ def add_app(techs, app_name, app_spec):
                 implies = [implies]
             for app_name in implies:
                 add_app(techs, app_name, data['apps'][app_name])
-           
+
 
 def get_categories(app_spec):
     """Return category names for this app_spec
@@ -111,7 +103,22 @@ def contains(v, regex):
     """
     if isinstance(v, bytes):
         v = v.decode()
-    return re.compile(regex.split('\\;')[0], flags=re.IGNORECASE).search(v)
+    bb = re.compile(regex.split('\\;')[0], flags=re.IGNORECASE)
+
+    if len(v) > 1_000_000:
+        print('q')
+        string_len = len(v)
+        part_size = string_len // 1000
+        step = part_size
+        for _ in range(string_len / part_size):
+            part = v[:step]
+            v = v[step - 1:]
+            step += part_size
+            if step > string_len:
+                break
+            res = re.compile(regex.split('\\;')[0], flags=re.IGNORECASE).search(part)
+            if res:
+                return res
 
 
 def contains_dict(d1, d2):
