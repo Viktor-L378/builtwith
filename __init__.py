@@ -106,11 +106,10 @@ def contains(v, regex):
     bb = re.compile(regex.split('\\;')[0], flags=re.IGNORECASE)
 
     if len(v) > 1_000_000:
-        print('q')
         string_len = len(v)
         part_size = string_len // 1000
         step = part_size
-        for _ in range(string_len / part_size):
+        for _ in range(string_len // part_size):
             part = v[:step]
             v = v[step - 1:]
             step += part_size
