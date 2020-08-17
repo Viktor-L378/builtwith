@@ -10,7 +10,7 @@ else:
     import urllib.request as urllib2
 
 
-def builtwith(url, headers=None, html=None, user_agent='builtwith'):
+def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
     """Detect the technology used to build a website
 
     >>> builtwith('http://wordpress.com') 
@@ -39,7 +39,7 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith'):
             if html:
                 # already have HTML so just need to make HEAD request for headers
                 request.get_method = lambda: 'HEAD'
-            response = urllib2.urlopen(request)
+            response = urllib2.urlopen(request, timeout=timeout)
             if headers is None:
                 headers = response.headers
             if html is None:
