@@ -36,9 +36,9 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
             if html:
                 # already have HTML so just need to make HEAD request for headers
                 request.get_method = lambda: 'HEAD'
-            print('before request')
             response = urllib2.urlopen(request, timeout=timeout)
-            print(response.headers)
+            print(dir(response))
+            print(response.getheaders())
             if headers is None:
                 headers = response.headers
                 print('before headers')
