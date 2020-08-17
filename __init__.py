@@ -42,7 +42,7 @@ def builtwith(url, headers=None, html=None, user_agent='builtwith', timeout=30):
                 request.get_method = lambda: 'HEAD'
             print('before request')
             response = urllib2.urlopen(request, timeout=timeout)
-            print('after request')
+            print(response.headers)
             if headers is None:
                 headers = response.headers
                 print('before headers')
